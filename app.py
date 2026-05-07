@@ -52,14 +52,25 @@ def biketower():
 def vlaky():
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'User-Agent': 'Mozilla/5.0',
+            'X-Requested-With': 'XMLHttpRequest',
         }
         now = datetime.now()
-        url = f"https://cp.sk/vlakbusmhd/spojenie/?f=Trnava&fc=1&t=Bratislava&tc=1&date={now.strftime('%d.%m.%Y')}&time={now.strftime('%H:%M')}&isArr=false"
-        r = requests.get(url, headers=headers, timeout=15)
-        soup = BeautifulSoup(r.text, 'html.parser')
+        url = "https://cp.sk/vlakbusmhd/Ajax/GetConnectionResults/"
+        params = {
+            'From': 'Trnava',
+            'FromHidden': 'Trnava%1%14141',
+            'To': 'Bratislava', 
+            'ToHidden': 'Bratislava%1%1371',
+            'Date': now.strftime('%d.%m.%Y'),
+            'Time': now.strftime('%H:%M'),
+            'IsArr': 'false',
+            'OnlyDirect': 'false',
+        }
+        r = requests.get(url, params=params, headers=headers, timeout=15)
         return jsonify({
-            'html_snippet': r.text[8000:10000]
+            'status': r.status_code,
+            'response': r.text[:2000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
