@@ -53,24 +53,32 @@ def vlaky():
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0',
-            'X-Requested-With': 'XMLHttpRequest',
         }
         now = datetime.now()
-        url = "https://cp.sk/vlakbusmhd/Ajax/GetConnectionResults/"
+        url = "https://idos.idnes.cz/vlakyautobusymhd/spojeni/"
         params = {
-            'From': 'Trnava',
-            'FromHidden': 'Trnava%1%14141',
-            'To': 'Bratislava', 
-            'ToHidden': 'Bratislava%1%1371',
-            'Date': now.strftime('%d.%m.%Y'),
-            'Time': now.strftime('%H:%M'),
-            'IsArr': 'false',
-            'OnlyDirect': 'false',
+            'f': 'Trnava',
+            't': 'Bratislava',
+            'date': now.strftime('%d.%m.%Y'),
+            'time': now.strftime('%H:%M'),
         }
         r = requests.get(url, params=params, headers=headers, timeout=15)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        
+        spoje = []
+        rows = soup.select('.connection-list li.item')[:5]
+        for row in rows:
+            odchod = row.select_one('.time-array .departure')
+            prichod = row.select_one('.time-array .arrival')
+            if odchod and prichod:
+                spoje.append({
+                    'odchod': odchod.text.strip(),
+                    'prichod': prichod.text.strip(),
+                })
+        
         return jsonify({
-            'status': r.status_code,
-            'response': r.text[:2000]
+            'spoje': spoje,
+            'html_snippet': r.text[5000:7000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
