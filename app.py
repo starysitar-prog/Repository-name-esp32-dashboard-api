@@ -2,8 +2,22 @@ from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import random
 
 app = Flask(__name__)
+
+CITATY = [
+    {"text": "Jediný spôsob, ako robiť skvelú prácu, je milovať to, čo robíš.", "autor": "Steve Jobs"},
+    {"text": "Život nie je o tom, čakať kým búrka pominie, ale naučiť sa tancovať v daždi.", "autor": "Vivian Greene"},
+    {"text": "Úspech je súčet malých snažení opakovaných deň čo deň.", "autor": "Robert Collier"},
+    {"text": "Neuróbte z hory krtinca. Ale ak to urobíte, môžete na ňu vyliezť.", "autor": "neznámy"},
+    {"text": "Každý deň je nová príležitosť byť lepším ako včera.", "autor": "neznámy"},
+    {"text": "Sny sa nestanú skutočnosťou samy od seba. Musíte vstať a pracovať na nich.", "autor": "neznámy"},
+    {"text": "Padnúť je dovolené. Vstať je povinné.", "autor": "neznámy"},
+    {"text": "Najlepší čas zasadiť strom bol pred 20 rokmi. Druhý najlepší čas je teraz.", "autor": "čínske príslovie"},
+    {"text": "Cesta tisíc míľ začína jediným krokom.", "autor": "Lao Tzu"},
+    {"text": "Buďte zmenou, ktorú chcete vidieť vo svete.", "autor": "Mahatma Gandhi"},
+]
 
 @app.route('/')
 def home():
@@ -48,22 +62,10 @@ def biketower():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-@app.route('/vlaky')
-def vlaky():
-    try:
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        now = datetime.now()
-        url = "https://www.zssk.sk/api/connections"
-        params = {
-            'fromStation': 'Trnava',
-            'toStation': 'Bratislava hlavná stanica',
-            'date': now.strftime('%Y-%m-%d'),
-            'time': now.strftime('%H:%M'),
-        }
-        r = requests.get(url, params=params, headers=headers, timeout=15)
-        return jsonify({
-            'status': r.status_code,
-            'response': r.text[:2000]
-        })
-    except Exception as e:
-        return jsonify({'error': str(e)})
+@app.route('/citat')
+def citat():
+    c = random.choice(CITATY)
+    return jsonify(c)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
