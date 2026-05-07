@@ -51,26 +51,15 @@ def biketower():
 @app.route('/vlaky')
 def vlaky():
     try:
-        session = requests.Session()
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'https://cp.sk/',
         }
         now = datetime.now()
-        params = {
-            'From': 'Trnava',
-            'FromHidden': 'Trnava%1%14141',
-            'To': 'Bratislava',
-            'ToHidden': 'Bratislava%1%1371',
-            'Date': now.strftime('%d.%m.%Y'),
-            'Time': now.strftime('%H:%M'),
-            'IsArr': 'False',
-            'OnlyDirect': 'False',
-        }
-        r = session.post('https://cp.sk/vlakbusmhd/spojenie/', data=params, headers=headers, timeout=15)
+        url = f"https://cp.sk/vlakbusmhd/spojenie/?f=Trnava&fc=1&t=Bratislava&tc=1&date={now.strftime('%d.%m.%Y')}&time={now.strftime('%H:%M')}&isArr=false"
+        r = requests.get(url, headers=headers, timeout=15)
         soup = BeautifulSoup(r.text, 'html.parser')
         return jsonify({
-            'html_snippet': r.text[6000:8000]
+            'html_snippet': r.text[8000:10000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
