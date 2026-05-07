@@ -41,17 +41,9 @@ def biketower():
         soup = BeautifulSoup(r.text, 'html.parser')
         
         adult = soup.find('div', class_='obsazenost--value adult')
-        kid = soup.find('div', class_='obsazenost--value kid')
-        
-        adult_spans = adult.find_all('span') if adult else []
-        kid_spans = kid.find_all('span') if kid else []
-        
-        adult_volne = ''.join([s.text for s in adult_spans])
-        kid_volne = ''.join([s.text for s in kid_spans])
         
         return jsonify({
-            'dospela_volne': adult_volne,
-            'detske_volne': kid_volne,
+            'adult_html': str(adult)
         })
     except Exception as e:
         return jsonify({'error': str(e)})
