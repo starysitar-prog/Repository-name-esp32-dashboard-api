@@ -39,19 +39,16 @@ def biketower():
         session.get('https://www.biketower.cz', headers=headers, timeout=10)
         r = session.get('https://www.biketower.cz/obsazenost_trnava_nadrazi/', headers=headers, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
-        
         adult = soup.find('div', class_='obsazenost--value adult')
         kid = soup.find('div', class_='obsazenost--value kid')
-        status = soup.find('div', class_='obsazenost--status')
-        
         return jsonify({
             'dospela_volne': adult.text.strip() if adult else '?',
             'detske_volne': kid.text.strip() if kid else '?',
-            'status': status.text.strip() if status else '?'
         })
     except Exception as e:
         return jsonify({'error': str(e)})
-        @app.route('/vlaky')
+
+@app.route('/vlaky')
 def vlaky():
     try:
         session = requests.Session()
@@ -72,7 +69,6 @@ def vlaky():
         }
         r = session.post('https://cp.sk/vlakbusmhd/spojenie/', data=params, headers=headers, timeout=15)
         soup = BeautifulSoup(r.text, 'html.parser')
-        
         spoje = []
         rows = soup.select('.connection-list .item')[:5]
         for row in rows:
@@ -83,7 +79,6 @@ def vlaky():
                     'odchod': odchod.text.strip(),
                     'prichod': prichod.text.strip(),
                 })
-        
         return jsonify({
             'spoje': spoje,
             'html_snippet': r.text[5000:6000]
