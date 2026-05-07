@@ -69,22 +69,8 @@ def vlaky():
         }
         r = session.post('https://cp.sk/vlakbusmhd/spojenie/', data=params, headers=headers, timeout=15)
         soup = BeautifulSoup(r.text, 'html.parser')
-        spoje = []
-        rows = soup.select('.connection-list .item')[:5]
-        for row in rows:
-            odchod = row.select_one('.departure')
-            prichod = row.select_one('.arrival')
-            if odchod and prichod:
-                spoje.append({
-                    'odchod': odchod.text.strip(),
-                    'prichod': prichod.text.strip(),
-                })
         return jsonify({
-            'spoje': spoje,
-            'html_snippet': r.text[5000:6000]
+            'html_snippet': r.text[6000:8000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
