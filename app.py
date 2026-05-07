@@ -36,19 +36,22 @@ def biketower():
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         }
-        # Najprv navstivime hlavnu stranku
         session.get('https://www.biketower.cz', headers=headers, timeout=10)
-        # Potom obsadenost
         r = session.get('https://www.biketower.cz/obsazenost_trnava_nadrazi/', headers=headers, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
         
-        # Debug - pozrime sa co dostaneme
         adult = soup.find('div', class_='obsazenost--value adult')
+        kid = soup.find('div', class_='obsazenost--value kid')
+        
+        adult_spans = adult.find_all('span') if adult else []
+        kid_spans = kid.find_all('span') if kid else []
+        
+        adult_volne = ''.join([s.text for s in adult_spans])
+        kid_volne = ''.join([s.text for s in kid_spans])
         
         return jsonify({
-            'adult_found': adult is not None,
-            'html_length': len(r.text),
-            'snippet': r.text[2000:3000]
+            'dospela_volne': adult_volne,
+            'detske_volne': kid_volne,
         })
     except Exception as e:
         return jsonify({'error': str(e)})
