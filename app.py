@@ -7,16 +7,16 @@ import random
 app = Flask(__name__)
 
 CITATY = [
-    {"text": "Jediný spôsob, ako robiť skvelú prácu, je milovať to, čo robíš.", "autor": "Steve Jobs"},
-    {"text": "Život nie je o tom, čakať kým búrka pominie, ale naučiť sa tancovať v daždi.", "autor": "Vivian Greene"},
-    {"text": "Úspech je súčet malých snažení opakovaných deň čo deň.", "autor": "Robert Collier"},
-    {"text": "Neuróbte z hory krtinca. Ale ak to urobíte, môžete na ňu vyliezť.", "autor": "neznámy"},
-    {"text": "Každý deň je nová príležitosť byť lepším ako včera.", "autor": "neznámy"},
-    {"text": "Sny sa nestanú skutočnosťou samy od seba. Musíte vstať a pracovať na nich.", "autor": "neznámy"},
-    {"text": "Padnúť je dovolené. Vstať je povinné.", "autor": "neznámy"},
-    {"text": "Najlepší čas zasadiť strom bol pred 20 rokmi. Druhý najlepší čas je teraz.", "autor": "čínske príslovie"},
-    {"text": "Cesta tisíc míľ začína jediným krokom.", "autor": "Lao Tzu"},
-    {"text": "Buďte zmenou, ktorú chcete vidieť vo svete.", "autor": "Mahatma Gandhi"},
+    {"text": "Jediny sposob, ako robit skvelu pracu, je milovat to, co robis.", "autor": "Steve Jobs"},
+    {"text": "Zivot nie je o tom, cakat kym burka pominie, ale naucit sa tancovat v dazdi.", "autor": "Vivian Greene"},
+    {"text": "Uspech je sucet malych snazeni opakovanych den co den.", "autor": "Robert Collier"},
+    {"text": "Neurobte z hory krtinca. Ale ak to urobite, mozete na nu vyliezt.", "autor": "neznamy"},
+    {"text": "Kazdy den je nova prilezitost byt lepsim ako vcera.", "autor": "neznamy"},
+    {"text": "Sny sa nestanu skutocnostou same od seba. Musite vstat a pracovat na nich.", "autor": "neznamy"},
+    {"text": "Padnut je dovolene. Vstat je povinne.", "autor": "neznamy"},
+    {"text": "Najlepsi cas zasadit strom bol pred 20 rokmi. Druhy najlepsi cas je teraz.", "autor": "cinske prislovie"},
+    {"text": "Cesta tisic mil zacina jedinym krokom.", "autor": "Lao Tzu"},
+    {"text": "Budte zmenou, ktoru chcete vidiet vo svete.", "autor": "Mahatma Gandhi"}
 ]
 
 @app.route('/')
