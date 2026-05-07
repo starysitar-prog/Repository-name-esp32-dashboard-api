@@ -51,34 +51,19 @@ def biketower():
 @app.route('/vlaky')
 def vlaky():
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0',
-        }
+        headers = {'User-Agent': 'Mozilla/5.0'}
         now = datetime.now()
-        url = "https://idos.idnes.cz/vlakyautobusymhd/spojeni/"
+        url = "https://www.zssk.sk/api/connections"
         params = {
-            'f': 'Trnava',
-            't': 'Bratislava',
-            'date': now.strftime('%d.%m.%Y'),
+            'fromStation': 'Trnava',
+            'toStation': 'Bratislava hlavná stanica',
+            'date': now.strftime('%Y-%m-%d'),
             'time': now.strftime('%H:%M'),
         }
         r = requests.get(url, params=params, headers=headers, timeout=15)
-        soup = BeautifulSoup(r.text, 'html.parser')
-        
-        spoje = []
-        rows = soup.select('.connection-list li.item')[:5]
-        for row in rows:
-            odchod = row.select_one('.time-array .departure')
-            prichod = row.select_one('.time-array .arrival')
-            if odchod and prichod:
-                spoje.append({
-                    'odchod': odchod.text.strip(),
-                    'prichod': prichod.text.strip(),
-                })
-        
         return jsonify({
-            'spoje': spoje,
-            'html_snippet': r.text[5000:7000]
+            'status': r.status_code,
+            'response': r.text[:2000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
