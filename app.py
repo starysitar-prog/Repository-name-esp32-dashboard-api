@@ -32,25 +32,23 @@ def pocasie():
 @app.route('/biketower')
 def biketower():
     try:
+        session = requests.Session()
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'sk,cs;q=0.9,en;q=0.8',
         }
-        r = requests.get('https://www.biketower.cz/obsazenost_trnava_nadrazi/', headers=headers, timeout=10)
+        # Najprv navstivime hlavnu stranku
+        session.get('https://www.biketower.cz', headers=headers, timeout=10)
+        # Potom obsadenost
+        r = session.get('https://www.biketower.cz/obsazenost_trnava_nadrazi/', headers=headers, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
         
+        # Debug - pozrime sa co dostaneme
         adult = soup.find('div', class_='obsazenost--value adult')
-        kid = soup.find('div', class_='obsazenost--value kid')
-        
-        adult_spans = adult.find_all('span') if adult else []
-        kid_spans = kid.find_all('span') if kid else []
         
         return jsonify({
-            'dospela_volne': adult_spans[0].text if len(adult_spans) > 0 else '?',
-            'dospela_celkom': adult_spans[1].text if len(adult_spans) > 1 else '?',
-            'detske_volne': kid_spans[0].text if len(kid_spans) > 0 else '?',
-            'detske_celkom': kid_spans[1].text if len(kid_spans) > 1 else '?',
+            'adult_found': adult is not None,
+            'html_length': len(r.text),
+            'snippet': r.text[2000:3000]
         })
     except Exception as e:
         return jsonify({'error': str(e)})
